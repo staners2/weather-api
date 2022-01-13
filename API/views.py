@@ -87,16 +87,17 @@ def login(request):
         serializer = UserProfileSerializer(user)
 
         return JsonResponse(serializer.data, status=status.HTTP_200_OK)
-'''
+
 @csrf_exempt
 @api_view(['GET'])
-def get_all_countries(request):
-    countries = Countries.objects.all()
+def get_all_languages(request):
+    languages = Language.objects.all()
 
-    serializer = CountriesSerializer(countries, many=True)
+    serializer = LanguageSerializer(languages, many=True)
 
     return JsonResponse(serializer.data, status=status.HTTP_200_OK, safe=False)
 
+'''
 @csrf_exempt
 @api_view(['GET'])
 def get_all_types(request):
