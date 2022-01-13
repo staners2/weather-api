@@ -12,15 +12,15 @@ class JsonKey(object):
 
         COUNTRY = "country"
 
-    class Countries(object):
+    class Language(object):
         ID = "id"
         TITLE = "title"
         PREFIX = "prefix"
 
-    class Types(object):
+    class Cities(object):
         ID = "id"
         TITLE = "title"
-        EN_TITLE = "en_title"
+        COUNTRY_CODE = "country_code"
 
     class Histories(object):
         ID = "id"
@@ -32,7 +32,9 @@ class JsonKey(object):
         USER = "user"
         TYPE = "type"
 
-    class Fact(object):
-        NUMBER = "number"
+    class Weather(object):
+        ID = "id"
+        TEMP = "description"
+        CITY_NAME = "number"
         DESCRIPTION = "description"
-        TYPE = "type"
+        DATE = "date"

@@ -109,51 +109,36 @@ def get_all_cities(request):
 
     return JsonResponse(serializer.data, status=status.HTTP_200_OK, safe=False)
 
-'''
-# @csrf_exempt
-# @api_view(['GET'])
-# def get_country(request, id):
-#     country = Countries.objects.get(id=id)
-#
-#     data = {
-#         JsonKey.Countries.ID: country.id,
-#         JsonKey.Countries.TITLE: country.title,
-#         JsonKey.Countries.PREFIX: country.prefix
-#     }
-#
-#     print(data)
-#
-#     return JsonResponse(data, status=status.HTTP_200_OK, safe=False)
-
 @csrf_exempt
 @api_view(['PUT'])
-def update_country(request, userprofile_id):
+def update_language(request, userprofile_id):
     errors = Error()
     params = request.data
     print(params)
 
-    country_id = params.get(JsonKey.Countries.ID)
+    language_id = params.get(JsonKey.Language.ID)
 
-    if (country_id == None):
+    if (language_id == None):
         errors.append(ErrorMessages.NOT_FOUND_REQUIRED_PARAMS)
         return JsonResponse({JsonKey.ERRORS: errors.messages}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        country = Countries.objects.get(id=country_id)
+        language = Language.objects.get(id=language_id)
         print("NOT ERROR EXIST")
-    except Countries.DoesNotExist:
+    except Language.DoesNotExist:
         errors.append(ErrorMessages.COUNTRIES_NOT_FOUND)
         return JsonResponse({JsonKey.ERRORS: errors.messages}, status=status.HTTP_404_NOT_FOUND)
 
 
     user = UserProfile.objects.get(id=userprofile_id)
-    user.country = country
+    user.language = language
     user.save()
 
     serializer = UserProfileSerializer(user)
 
     return JsonResponse(serializer.data, status=status.HTTP_200_OK, safe=False)
 
+'''
 @csrf_exempt
 @api_view(['GET'])
 def show_histories(request, userprofile_id):
