@@ -11,11 +11,10 @@ urlpatterns = [
     path('api/auth/registration', views.registration, name='registration'),
     path('api/auth/login', views.login, name='login'),
     path('api/languages', views.get_all_languages, name="get_all_languages"),
+    path('api/cities', views.get_all_cities, name="get_all_cities"),
 ]
 
 '''
-    
-    path('api/types', views.get_all_types, name="get_all_types"),
     path('api/userprofile/<int:userprofile_id>/country', views.update_country, name="update_country"),
     path('api/userprofile/<int:userprofile_id>/histories', views.show_histories, name="show_histories"),
     path('api/userprofile/<int:userprofile_id>/histories/<int:history_id>', views.delete_histories, name="delete_histories"),

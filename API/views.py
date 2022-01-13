@@ -97,20 +97,19 @@ def get_all_languages(request):
 
     return JsonResponse(serializer.data, status=status.HTTP_200_OK, safe=False)
 
-'''
+
 @csrf_exempt
 @api_view(['GET'])
-def get_all_types(request):
-    errors = Error()
+def get_all_cities(request):
     params = request.data
-    print(params)
 
-    types = Types.objects.all()
+    types = Cities.objects.all()
 
-    serializer = TypesSerializer(types, many=True)
+    serializer = CitiesSerializer(types, many=True)
 
     return JsonResponse(serializer.data, status=status.HTTP_200_OK, safe=False)
 
+'''
 # @csrf_exempt
 # @api_view(['GET'])
 # def get_country(request, id):
