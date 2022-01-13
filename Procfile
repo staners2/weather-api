@@ -1,0 +1,1 @@
+web: gunicorn MobileApi.wsgi

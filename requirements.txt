@@ -1,0 +1,6 @@
+gunicorn
+requests
+translate
+djangorestframework
+django
+django-heroku
