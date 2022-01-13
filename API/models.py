@@ -18,7 +18,7 @@ class Cities(models.Model):
 
 class Weather(models.Model):
     id = models.BigAutoField(primary_key=True)
-    city_name = models.TextField(null=True)
+    city = models.ForeignKey(Cities, null=True, on_delete=models.SET_NULL, db_constraint=False)
     temp = models.IntegerField(null=True)
     description = models.TextField(null=True)
     date = models.DateTimeField()
