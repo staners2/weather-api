@@ -1,15 +1,15 @@
 from rest_framework import serializers
-from .models import UserProfile, Error, Countries, Histories, Types, Fact
+from .models import UserProfile, Error, Language, Histories, Cities, Weather
 
-class CountriesSerializer(serializers.ModelSerializer):
+class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Countries
+        model = Language
         depth = 1
         fields = "__all__"
 
-class TypesSerializer(serializers.ModelSerializer):
+class CitiesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Types
+        model = Cities
         depth = 1
         fields = "__all__"
 
@@ -19,9 +19,9 @@ class HistoriesSerializer(serializers.ModelSerializer):
         depth = 2
         fields = "__all__"
 
-class FactsSerializer(serializers.ModelSerializer):
+class WeatherSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Fact
+        model = Weather
         depth = 1
         fields = "__all__"
 

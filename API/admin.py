@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import Countries,Types
+from .models import Language, Cities
 
-admin.site.register(Countries)
-admin.site.register(Types)
+admin.site.register(Language)
+admin.site.register(Cities)
 
 # Register your models here.

@@ -17,11 +17,11 @@ from .Helpers import Helpers
 from .constant.ApiUrl import ApiUrl
 from .constant.ErrorMessages import ErrorMessages
 from .constant.JsonKey import JsonKey
-from .models import UserProfile, Error, Countries, Histories, Types, Fact
+from .models import UserProfile, Error, Language, Histories, Cities, Weather
 
 
 @csrf_exempt
-@api_view(['GET', 'POST'])
+@api_view(['POST'])
 def registration(request):
     errors = Error()
     params = request.data
@@ -29,16 +29,16 @@ def registration(request):
 
     login = params.get('login')
     password = params.get('password')
-    country_id = params.get('country_id')
+    language_id = params.get('language_id')
 
     if request.method == 'POST':
         print("POST")
 
-        if (login == None or password == None or country_id == None):
+        if (login == None or password == None or language_id == None):
             errors.append(ErrorMessages.NOT_FOUND_REQUIRED_PARAMS)
             return JsonResponse({JsonKey.ERRORS: errors.messages}, status=status.HTTP_400_BAD_REQUEST)
 
-        country = Countries.objects.get(id=country_id)
+        language = Language.objects.get(id=language_id)
 
         try:
             UserProfile.objects.get(login=login, password=password)
@@ -49,7 +49,7 @@ def registration(request):
         except UserProfile.DoesNotExist:
             pass
 
-        user = UserProfile.objects.create(login=login, password=password, country=country)
+        user = UserProfile.objects.create(login=login, password=password, language=language)
         user.save()
 
         serializer = UserProfileSerializer(user)
@@ -65,7 +65,7 @@ def login(request):
 
     login = params.get('login')
     password = params.get('password')
-    country_id = params.get("country_id")
+    language_id = params.get("language_id")
 
     if request.method == 'POST':
         print("POST")
@@ -81,13 +81,13 @@ def login(request):
             errors.append(ErrorMessages.LOGIN_ERROR_401)
             return JsonResponse({JsonKey.ERRORS: errors.messages}, status=status.HTTP_401_UNAUTHORIZED)
 
-        country = Countries.objects.get(id=country_id)
-        user.country = country
+        language = Language.objects.get(id=language_id)
+        user.language = language
         user.save()
         serializer = UserProfileSerializer(user)
 
         return JsonResponse(serializer.data, status=status.HTTP_200_OK)
-
+'''
 @csrf_exempt
 @api_view(['GET'])
 def get_all_countries(request):
@@ -283,3 +283,4 @@ def get_fact_by_type(request, type, number):
     serializer = FactsSerializer(fact)
 
     return JsonResponse(serializer.data, status=status.HTTP_200_OK, safe=False)
+'''
