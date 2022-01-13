@@ -14,7 +14,7 @@ import json
 from .serializers import *
 
 from .Helpers import Helpers
-from .constant.ApiUrl import ApiUrl
+from .constant.API import API
 from .constant.ErrorMessages import ErrorMessages
 from .constant.JsonKey import JsonKey
 from .models import UserProfile, Error, Language, Histories, Cities, Weather
@@ -138,7 +138,7 @@ def update_language(request, userprofile_id):
 
     return JsonResponse(serializer.data, status=status.HTTP_200_OK, safe=False)
 
-'''
+
 @csrf_exempt
 @api_view(['GET'])
 def show_histories(request, userprofile_id):
@@ -151,13 +151,11 @@ def show_histories(request, userprofile_id):
         errors.append(ErrorMessages.HISTORIES_NOT_FOUND)
         return JsonResponse({JsonKey.ERRORS: errors.messages}, status=status.HTTP_200_OK)
 
-    for item in histories:
-        item.fact.type.title = Helpers.translate_language(user.country.prefix, item.fact.type.title)
-        item.fact.description = Helpers.translate_language(user.country.prefix, item.fact.description)
     serializer = HistoriesSerializer(histories, many=True)
 
     return JsonResponse(serializer.data, status=status.HTTP_200_OK, safe=False)
 
+'''
 @csrf_exempt
 @api_view(['DELETE'])
 def delete_histories(request, userprofile_id, history_id):
