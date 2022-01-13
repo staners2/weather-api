@@ -14,14 +14,13 @@ urlpatterns = [
     path('api/cities', views.get_all_cities, name="get_all_cities"),
     path('api/userprofile/<int:userprofile_id>/language', views.update_language, name="update_language"),
     path('api/userprofile/<int:userprofile_id>/histories', views.show_histories, name="show_histories"),
+    path('api/userprofile/<int:userprofile_id>/histories/<int:history_id>', views.delete_histories, name="delete_histories"),
+    path('api/userprofile/weather/<str:city_name>', views.get_weather, name="get_weather"),
 ]
 
 '''
-    
-    path('api/userprofile/<int:userprofile_id>/histories/<int:history_id>', views.delete_histories, name="delete_histories"),
-    path('api/userprofile/fact/random/<str:type>', views.get_random_fact, name="get_random_fact"),
     path('api/userprofile/fact/<str:type>/<int:number>', views.get_fact_by_type, name="get_fact_by_type"),
-    '''
+'''
 
 # включаем возможность обработки картинок
 if settings.DEBUG:

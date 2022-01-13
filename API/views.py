@@ -12,8 +12,6 @@ from django.forms.models import model_to_dict
 from django.core import serializers
 import json
 from .serializers import *
-
-from .Helpers import Helpers
 from .constant.API import API
 from .constant.ErrorMessages import ErrorMessages
 from .constant.JsonKey import JsonKey
@@ -155,7 +153,7 @@ def show_histories(request, userprofile_id):
 
     return JsonResponse(serializer.data, status=status.HTTP_200_OK, safe=False)
 
-'''
+
 @csrf_exempt
 @api_view(['DELETE'])
 def delete_histories(request, userprofile_id, history_id):
@@ -173,9 +171,10 @@ def delete_histories(request, userprofile_id, history_id):
 
     return HttpResponse(status=status.HTTP_200_OK)
 
+
 @csrf_exempt
 @api_view(['POST'])
-def get_random_fact(request, type):
+def get_weather(request, city_name):
     errors = Error()
     params = request.data
     print(params)
@@ -186,84 +185,37 @@ def get_random_fact(request, type):
         "Content-Type": "application/json"
     }
 
-    if (type == None or len(Types.objects.filter(en_title = type)) == 0):
-        errors.append(ErrorMessages.GET_RANDOM_TYPES_NOT_FOUND)
+    city = Cities.objects.filter(title=city_name)
+    if (city == None or len(city) == 0):
+        errors.append(ErrorMessages.CITIES_NOT_FOUND)
         return JsonResponse({JsonKey.ERRORS: errors.messages}, status=status.HTTP_404_NOT_FOUND)
 
     if (userprofile_id == None):
         errors.append(ErrorMessages.NOT_FOUND_REQUIRED_PARAMS)
         return JsonResponse({JsonKey.ERRORS: errors.messages}, status=status.HTTP_404_NOT_FOUND)
 
+    city = city[0]
     user = UserProfile.objects.get(id=userprofile_id)
 
-    urlList = {
-        'trivia': ApiUrl.RANDOM_TRIVIA,
-        'year': ApiUrl.RANDOM_YEAR,
-        'math': ApiUrl.RANDOM_MATH,
-    }
+    URL = API.GENERATE_URL.format(city.title, city.country_code, user.language.prefix, API.API_KEY)
 
-    response = requests.get(headers=headers, url=urlList[type])
+    response = requests.get(headers=headers, url=URL)
     print(response.text)
     obj = json.loads(response.text)
 
-    type = Types.objects.get(en_title=obj["type"])
-    number = obj["number"]
-    description = obj["text"]
+    obj = obj['data'][0]
+    temp = obj['temp']
+
+    weather_response = obj['weather']
+    description = weather_response['description']
     date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    fact = Fact.objects.create(type=type, number=number, description=description, date=date)
-    fact.save()
+    weather = Weather.objects.create(city=city, temp=temp, description=description, date=date)
+    weather.save()
 
-    history = Histories.objects.create(user=user, fact=fact)
+    history = Histories.objects.create(user=user, weather=weather)
     history.save()
 
-    history.fact.type.title = Helpers.translate_language(user.country.prefix, history.fact.type.title)
-    history.fact.description = Helpers.translate_language(user.country.prefix, history.fact.description)
-
-    serializer = FactsSerializer(fact)
+    serializer = HistoriesSerializer(history)
 
     return JsonResponse(serializer.data, status=status.HTTP_200_OK, safe=False)
-
-@csrf_exempt
-@api_view(['POST'])
-def get_fact_by_type(request, type, number):
-    errors = Error()
-    params = request.data
-    print(params)
-
-    userprofile_id = params.get(JsonKey.USERPROFILE_ID)
-
-    headers = {
-        "Content-Type": "application/json"
-    }
-
-    if (type == None or len(Types.objects.filter(en_title=type)) == 0):
-        errors.append(ErrorMessages.GET_RANDOM_TYPES_NOT_FOUND)
-        return JsonResponse({JsonKey.ERRORS: errors.messages}, status=status.HTTP_404_NOT_FOUND)
-
-    user = UserProfile.objects.get(id=userprofile_id)
-
-    url=ApiUrl.GENERATE_URL_BY_NUMBER_AND_TYPE.format(number, type)
-
-    response = requests.get(headers=headers, url=url)
-    print(response.text)
-    obj = json.loads(response.text)
-
-    type = Types.objects.get(en_title=obj["type"])
-    number = obj["number"]
-    description = obj["text"]
-    date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-    fact = Fact.objects.create(type=type, number=number, description=description, date=date)
-    fact.save()
-
-    history = Histories.objects.create(user=user, fact=fact)
-    history.save()
-
-    history.fact.type.title = Helpers.translate_language(user.country.prefix, history.fact.type.title)
-    history.fact.description = Helpers.translate_language(user.country.prefix, history.fact.description)
-
-    serializer = FactsSerializer(fact)
-
-    return JsonResponse(serializer.data, status=status.HTTP_200_OK, safe=False)
-'''
