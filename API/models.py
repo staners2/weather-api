@@ -20,6 +20,8 @@ class Weather(models.Model):
     id = models.BigAutoField(primary_key=True)
     city = models.ForeignKey(Cities, null=True, on_delete=models.SET_NULL, db_constraint=False)
     temp = models.IntegerField(null=True)
+    app_temp = models.TextField(null=True)
+    wind_speed = models.TextField(null=True)
     description = models.TextField(null=True)
     date = models.DateTimeField()
 
